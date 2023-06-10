@@ -61,3 +61,11 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
+
+VCR.configure do |config|
+  config.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
+  config.hook_into :webmock
+  # config.filter_sensitive_data('<API Key>') { ENV['name_api_key'] } #name_api_key from config/application.yml
+  config.configure_rspec_metadata!
+  config.default_cassette_options = { allow_playback_repeats: true }
+end
