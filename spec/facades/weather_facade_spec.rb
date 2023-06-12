@@ -67,5 +67,19 @@ RSpec.describe WeatherFacade, :vcr do
           end
       end
     end
+
+    describe 'get_current_forecast(coordinates)' do
+      it 'returns a hash with summary and temperature' do
+        coordinates = {lat: 39.74001, lon: -104.99202}
+        forecast = WeatherFacade.new.get_current_forecast(coordinates)
+
+        expect(forecast).to be_a(Hash)
+        keys = %i[summary temperature]
+        keys.each do |key|
+          expect(forecast).to have_key(key)
+          expect(forecast[key]).to be_a(String)
+        end
+      end
+    end
   end
 end
