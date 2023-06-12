@@ -14,6 +14,9 @@ RSpec.describe LibraryFacade, :vcr do
         expect(result[:total_books_found]).to be_an(Integer)
         expect(result).to have_key(:books)
         expect(result[:books]).to be_an(Array)
+        expect(result).to have_key(:destination)
+        expect(result[:destination]).to be_a(String)
+        expect(result[:destination]).to eq(location)
 
         books = result[:books]
         expect(books.count).to eq(5)
