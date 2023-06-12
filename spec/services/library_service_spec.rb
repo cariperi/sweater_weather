@@ -12,5 +12,8 @@ RSpec.describe LibraryService do
 
     expect(response[:docs]).to be_an(Array)
     expect(response[:docs].count).to eq(5)
+
+    expect(response).to have_key(:q)
+    expect(response[:q]).to eq('Denver, CO')
   end
 end
