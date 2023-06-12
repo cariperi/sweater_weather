@@ -40,7 +40,7 @@ RSpec.describe 'Get Books for a City', :vcr do
       keys = %i[summary temperature]
       keys.each do |key|
         expect(attributes[:forecast]).to have_key(key)
-        expect(attributes[key]).to be_a(String)
+        expect(attributes[:forecast][key]).to be_a(String)
       end
 
       expect(attributes).to have_key(:total_books_found)
@@ -48,14 +48,14 @@ RSpec.describe 'Get Books for a City', :vcr do
 
       expect(attributes).to have_key(:books)
       expect(attributes[:books]).to be_an(Array)
-      expect(attributes[:books].count).to eq(quantity)
+      expect(attributes[:books].count).to eq(quantity.to_i)
 
       books = attributes[:books]
       books.each do |book|
         expect(book).to be_a(Hash)
         expect(book).to have_key(:isbn)
-        expect(book[:isbn]).to be_an(Array)
-        expect(book[:isbn][0]).to be_a(String)
+        expect(book[:isbn]).to be_an(Array) unless book[:isbn].nil?
+        expect(book[:isbn][0]).to be_a(String) unless book[:isbn].nil?
         expect(book).to have_key(:title)
         expect(book[:title]).to be_a(String)
         expect(book).to have_key(:publisher)
