@@ -64,4 +64,26 @@ RSpec.describe 'Get Books for a City', :vcr do
       end
     end
   end
+
+  describe 'Sad Paths' do
+    it 'returns an error message and status if location is empty' do
+      location = ''
+      quantity = '5'
+
+      get "/api/v1/book-search?location=#{location}&quantity=#{quantity}"
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data).to be_a Hash
+      expect(data).to have_key(:errors)
+      expect(data[:errors]).to be_an(Array)
+
+      errors = data[:errors]
+      expect(errors[0]).to be_a(Hash)
+      expect(errors[0]).to have_key(:detail)
+      expect(errors[0][:detail]).to eq('Search cannot be completed with the given information.')
+    end
+  end
 end
