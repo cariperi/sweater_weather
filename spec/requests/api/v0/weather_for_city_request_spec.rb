@@ -94,7 +94,7 @@ RSpec.describe 'Get Weather for a City', :vcr do
   end
 
   describe 'Sad Paths' do
-    xit 'returns an error code and message if a location is not provided' do
+    it 'returns an error code and message if a location is not provided' do
       location = ''
 
       get "/api/v0/forecast?location=#{location}"
@@ -104,22 +104,13 @@ RSpec.describe 'Get Weather for a City', :vcr do
 
       data = JSON.parse(response.body, symbolize_names: true)
       expect(data).to be_a Hash
-      expect(data).to have_key(:error)
-      expect(data[:error]).to be('No forecast information is available for the requested location.')
-    end
+      expect(data).to have_key(:errors)
+      expect(data[:errors]).to be_an(Array)
 
-    xit 'returns an error code and message if the provided location is not valid' do
-      location = 'A wrong location'
-
-      get "/api/v0/forecast?location=#{location}"
-
-      expect(response).to_not be_successful
-      expect(response.status).to eq(400)
-
-      data = JSON.parse(response.body, symbolize_names: true)
-      expect(data).to be_a Hash
-      expect(data).to have_key(:error)
-      expect(data[:error]).to be('No forecast information is available for the requested location.')
+      errors = data[:errors]
+      expect(errors[0]).to be_a(Hash)
+      expect(errors[0]).to have_key(:detail)
+      expect(errors[0][:detail]).to eq('No forecast information is available for the requested location.')
     end
   end
 end
