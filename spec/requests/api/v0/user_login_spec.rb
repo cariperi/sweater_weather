@@ -86,4 +86,93 @@ RSpec.describe 'User Login', :vcr do
       expect(attributes).to_not have_key(:pasword_digest)
     end
   end
+
+  describe 'Sad Paths' do
+    it 'returns an error message and status when the incorrect password is provided' do
+      user = User.create(email: 'whatever@example.com', password: 'password', password_confirmation: 'password' )
+      user.api_keys.create(token: 'test_key')
+
+      params = { email: 'whatever@example.com',
+                 password: 'password1' }
+
+      post('/api/v0/sessions', params:)
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(401)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data).to be_a Hash
+      expect(data).to have_key(:errors)
+      expect(data[:errors]).to be_an(Array)
+
+      errors = data[:errors]
+      expect(errors[0]).to be_a(Hash)
+      expect(errors[0]).to have_key(:detail)
+      expect(errors[0][:detail]).to eq('The credentials provided are not valid.')
+    end
+
+    it 'returns an error message and status when an unregistered email is provided' do
+      params = { email: 'whatever@example.com',
+                 password: 'password' }
+
+      post('/api/v0/sessions', params:)
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(401)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data).to be_a Hash
+      expect(data).to have_key(:errors)
+      expect(data[:errors]).to be_an(Array)
+
+      errors = data[:errors]
+      expect(errors[0]).to be_a(Hash)
+      expect(errors[0]).to have_key(:detail)
+      expect(errors[0][:detail]).to eq('The credentials provided are not valid.')
+    end
+
+    it 'returns an error message and status if email field is missing' do
+      user = User.create(email: 'whatever@example.com', password: 'password', password_confirmation: 'password' )
+      user.api_keys.create(token: 'test_key')
+
+      params = { password: 'password' }
+
+      post('/api/v0/sessions', params:)
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data).to be_a Hash
+      expect(data).to have_key(:errors)
+      expect(data[:errors]).to be_an(Array)
+
+      errors = data[:errors]
+      expect(errors[0]).to be_a(Hash)
+      expect(errors[0]).to have_key(:detail)
+      expect(errors[0][:detail]).to eq('All fields must be provided.')
+    end
+
+    it 'returns an error message and status if password field is missing' do
+      user = User.create(email: 'whatever@example.com', password: 'password', password_confirmation: 'password' )
+      user.api_keys.create(token: 'test_key')
+
+      params = { email: 'whatever@example.com' }
+
+      post('/api/v0/sessions', params:)
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data).to be_a Hash
+      expect(data).to have_key(:errors)
+      expect(data[:errors]).to be_an(Array)
+
+      errors = data[:errors]
+      expect(errors[0]).to be_a(Hash)
+      expect(errors[0]).to have_key(:detail)
+      expect(errors[0][:detail]).to eq('All fields must be provided.')
+    end
+  end
 end
