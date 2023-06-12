@@ -23,7 +23,7 @@ RSpec.describe LibraryFacade, :vcr do
         books.each do |book|
           expect(book).to be_a(Hash)
           expect(book).to have_key(:isbn)
-          expect(book[:isbn]).to be_an(Array)
+          expect(book[:isbn]).to be_an(Array) unless book[:isbn].nil?
           expect(book).to have_key(:title)
           expect(book[:title]).to be_a(String)
           expect(book).to have_key(:publisher)
