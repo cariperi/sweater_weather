@@ -3,6 +3,10 @@ class WeatherFacade
     format_data(weather_data(coordinates))
   end
 
+  def get_current_forecast(coordinates)
+    format_day_data(weather_data(coordinates))
+  end
+
   private
 
   def service
@@ -19,6 +23,13 @@ class WeatherFacade
     hourly_weather = format_hourly(data[:forecast][:forecastday][0][:hour])
 
     { current_weather:, daily_weather:, hourly_weather: }
+  end
+
+  def format_day_data(data)
+    temp = "#{data[:current][:temp_f].to_i} F"
+
+    { summary: data[:current][:condition][:text],
+      temperature: temp }
   end
 
   def format_current(data)
