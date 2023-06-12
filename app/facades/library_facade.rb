@@ -1,6 +1,6 @@
 class LibraryFacade
   def get_books(location, quantity)
-    format_data(book_data(location, quantity))
+    format_data(found_books(location, quantity))
   end
 
   private
@@ -9,22 +9,19 @@ class LibraryFacade
     @_service ||= LibraryService.new
   end
 
-  def book_data(location, quantity)
+  def found_books(location, quantity)
     @_book_data ||= service.get_books(location, quantity)
   end
 
   def format_data(data)
-    books = []
-    data[:docs].each do |doc|
-      details = { isbn: doc[:isbn],
-                  title: doc[:title],
-                  publisher: doc[:publisher] }
-
-      books << details
-    end
-
     { destination: data[:q],
       total_books_found: data[:numFound],
-      books: books }
+      books: format_book_details(data[:docs]) }
+  end
+
+  def format_book_details(books_data)
+    books_data.map do |book|
+      { isbn: book[:isbn], title: book[:title], publisher: book[:publisher] }
+    end
   end
 end
