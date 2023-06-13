@@ -13,10 +13,14 @@ class RoadTripFacade
   end
 
   def get_destination_forecast(destination, eta)
+    return {} if eta.is_a?(String)
+
     WeatherFacade.new.get_destination_forecast(destination, eta)
   end
 
   def get_eta(destination, time)
+    return time if time.is_a?(String)
+
     coordinates = GeocodeFacade.new.get_coordinates(destination)
     timezone = Timezone.lookup(coordinates[:lat], coordinates[:lon])
 

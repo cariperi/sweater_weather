@@ -14,6 +14,8 @@ class RoadTrip
   end
 
   def format_time(time)
+    return time if time.is_a?(String)
+
     "#{time.div(3600)}h #{(time % 3600).div(60)}m"
   end
 end
