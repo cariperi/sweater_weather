@@ -3,6 +3,10 @@ class GeocodeService
     get_url("/geocoding/v1/address?location=#{location}")
   end
 
+  def get_travel_time(origin, destination)
+    get_url("/directions/v2/route?from=#{origin}&to=#{destination}")
+  end
+
   private
 
   def get_url(url)
