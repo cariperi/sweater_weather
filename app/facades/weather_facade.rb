@@ -3,6 +3,10 @@ class WeatherFacade
     format_data(weather_data(coordinates))
   end
 
+  def get_destination_forecast(destination, eta)
+    format_forecast_data(forecast_data(destination, eta))
+  end
+
   private
 
   def service
@@ -13,12 +17,24 @@ class WeatherFacade
     @_weather_data ||= service.get_weather(coordinates)
   end
 
+  def forecast_data(destination, eta)
+    @_forecast_data ||= service.get_forecast(destination, eta)
+  end
+
   def format_data(data)
     current_weather = format_current(data[:current])
     daily_weather = format_daily(data[:forecast][:forecastday])
     hourly_weather = format_hourly(data[:forecast][:forecastday][0][:hour])
 
     { current_weather:, daily_weather:, hourly_weather: }
+  end
+
+  def format_forecast_data(data)
+    hour = data[:forecast][:forecastday][0][:hour][0]
+    { datetime: hour[:time],
+      temperature: hour[:temp_f],
+      condition: hour[:condition][:text]
+    }
   end
 
   def format_current(data)
