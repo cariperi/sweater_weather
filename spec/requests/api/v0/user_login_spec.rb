@@ -108,7 +108,7 @@ RSpec.describe 'User Login', :vcr do
       errors = data[:errors]
       expect(errors[0]).to be_a(Hash)
       expect(errors[0]).to have_key(:detail)
-      expect(errors[0][:detail]).to eq('The credentials provided are not valid.')
+      expect(errors[0][:detail]).to eq('Unauthorized request.')
     end
 
     it 'returns an error message and status when an unregistered email is provided' do
@@ -128,7 +128,7 @@ RSpec.describe 'User Login', :vcr do
       errors = data[:errors]
       expect(errors[0]).to be_a(Hash)
       expect(errors[0]).to have_key(:detail)
-      expect(errors[0][:detail]).to eq('The credentials provided are not valid.')
+      expect(errors[0][:detail]).to eq('Unauthorized request.')
     end
 
     it 'returns an error message and status if email field is missing' do
