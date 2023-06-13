@@ -67,7 +67,7 @@ VCR.configure do |config|
   config.hook_into :webmock
   # config.filter_sensitive_data('<API Key>') { ENV['name_api_key'] } #name_api_key from config/application.yml
   config.configure_rspec_metadata!
-  config.default_cassette_options = { allow_playback_repeats: true }
+  config.default_cassette_options = { allow_playback_repeats: true, record: :new_episodes }
 end
 
 Shoulda::Matchers.configure do |config|
