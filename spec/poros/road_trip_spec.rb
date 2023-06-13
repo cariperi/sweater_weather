@@ -22,4 +22,17 @@ RSpec.describe RoadTrip do
       expect(weather).to have_key(:condition)
     end
   end
+
+  describe 'instance methods' do
+    it 'formats time in seconds to a string with hours and minutes' do
+      origin = 'Cincinnati, OH'
+      destination = 'Chicago, IL'
+      time = 7980
+      weather = { datetime: '2023-04-07 23:00', temperature: 44.2, condition: 'Cloudy' }
+
+      road_trip = RoadTrip.new(origin, destination, time, weather)
+
+      expect(road_trip.format_time(time)).to eq('2h 13m')
+    end
+  end
 end
