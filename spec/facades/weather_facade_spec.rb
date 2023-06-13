@@ -67,5 +67,22 @@ RSpec.describe WeatherFacade, :vcr do
           end
       end
     end
+
+    describe 'get_destination_forecast(destination, eta)' do
+      it 'returns forecast weather data for a given place and date / hour' do
+        destination = 'Chicago, IL'
+        eta = { date: ((Date.today + 1.day)).to_s, hour: '05' }
+
+        weather = WeatherFacade.new.get_destination_forecast(destination, eta)
+
+        expect(weather).to be_a(Hash)
+        expect(weather).to have_key(:datetime)
+        expect(weather[:datetime]).to be_a(String)
+        expect(weather).to have_key(:temperature)
+        expect(weather[:temperature]).to be_a(Float)
+        expect(weather).to have_key(:condition)
+        expect(weather[:condition]).to be_a(String)
+      end
+    end
   end
 end
