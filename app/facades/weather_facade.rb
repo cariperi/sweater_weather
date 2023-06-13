@@ -33,8 +33,7 @@ class WeatherFacade
     hour = data[:forecast][:forecastday][0][:hour][0]
     { datetime: hour[:time],
       temperature: hour[:temp_f],
-      condition: hour[:condition][:text]
-    }
+      condition: hour[:condition][:text] }
   end
 
   def format_current(data)
