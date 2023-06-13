@@ -117,20 +117,103 @@ RSpec.describe 'Road Trip Request' do
   end
 
   describe 'Sad Paths' do
-    xit 'returns a 401 error and message when API key is not provided' do
+    it 'returns a 401 error and message when API key is not provided' do
+      user = User.create(email: 'whatever@example.com', password: 'password', password_confirmation: 'password' )
+      user.api_keys.create(token: 'test_key')
 
+      params = { origin: 'New York, NY',
+                 destination: 'Los Angeles, CA' }
+
+      post('/api/v0/road_trip', params:)
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(401)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data).to be_a Hash
+      expect(data).to have_key(:errors)
+      expect(data[:errors]).to be_an(Array)
+
+      errors = data[:errors]
+      expect(errors[0]).to be_a(Hash)
+      expect(errors[0]).to have_key(:detail)
+      expect(errors[0][:detail]).to eq('Unauthorized request.')
     end
 
-    xit 'returns a 401 error and message when incorrect API key is provided' do
+    it 'returns a 401 error and message when incorrect API key is provided' do
+      user = User.create(email: 'whatever@example.com', password: 'password', password_confirmation: 'password' )
+      user.api_keys.create(token: 'test_key')
 
+      params = { origin: 'New York, NY',
+                 destination: 'Los Angeles, CA',
+                 api_key: 'a_different_key' }
+
+      post('/api/v0/road_trip', params:)
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(401)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data).to be_a Hash
+      expect(data).to have_key(:errors)
+      expect(data[:errors]).to be_an(Array)
+
+      errors = data[:errors]
+      expect(errors[0]).to be_a(Hash)
+      expect(errors[0]).to have_key(:detail)
+      expect(errors[0][:detail]).to eq('Unauthorized request.')
     end
 
-    xit 'returns a 400 error if origin is not provided' do
+    it 'returns a 400 error if origin is not provided' do
+      user = User.create(email: 'whatever@example.com', password: 'password', password_confirmation: 'password' )
+      user.api_keys.create(token: 'test_key')
 
+      params = { destination: 'Los Angeles, CA',
+                 api_key: 'test_key' }
+
+      post('/api/v0/road_trip', params:)
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data).to be_a Hash
+      expect(data).to have_key(:errors)
+      expect(data[:errors]).to be_an(Array)
+
+      errors = data[:errors]
+      expect(errors[0]).to be_a(Hash)
+      expect(errors[0]).to have_key(:detail)
+      expect(errors[0][:detail]).to eq('All fields must be provided.')
     end
 
-    xit 'returns a 400 error if destination is not provided' do
+    it 'returns a 400 error if destination is not provided' do
+      user = User.create(email: 'whatever@example.com', password: 'password', password_confirmation: 'password' )
+      user.api_keys.create(token: 'test_key')
 
+      params = { origin: 'Los Angeles, CA',
+                 api_key: 'test_key' }
+
+      post('/api/v0/road_trip', params:)
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      expect(response).to_not be_successful
+      expect(response.status).to eq(400)
+
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data).to be_a Hash
+      expect(data).to have_key(:errors)
+      expect(data[:errors]).to be_an(Array)
+
+      errors = data[:errors]
+      expect(errors[0]).to be_a(Hash)
+      expect(errors[0]).to have_key(:detail)
+      expect(errors[0][:detail]).to eq('All fields must be provided.')
     end
   end
 end
