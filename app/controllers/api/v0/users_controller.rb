@@ -17,7 +17,7 @@ class Api::V0::UsersController < ApplicationController
   def check_params
     return unless params[:email].nil? || params[:password].nil? || params[:password_confirmation].nil?
 
-    render json: { errors: [{ detail: 'All fields must be provided.' }] }, status: 400
+    render_missing_params_response
   end
 
   def format_email(params)

@@ -18,7 +18,8 @@ RSpec.describe 'Get Weather for a City', :vcr do
       expect(forecast).to be_a(Hash)
 
       expect(forecast).to have_key(:id)
-      expect(forecast[:id]).to be(nil)
+      expect(forecast[:id]).to be_a(String)
+      expect(forecast[:id]).to eq('null')
 
       expect(forecast).to have_key(:type)
       expect(forecast[:type]).to be_a(String)

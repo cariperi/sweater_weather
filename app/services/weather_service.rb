@@ -3,6 +3,10 @@ class WeatherService
     get_url("/v1/forecast.json?q=#{coordinates[:lat]},#{coordinates[:lon]}&days=5")
   end
 
+  def get_forecast(destination, eta)
+    get_url("/v1/forecast.json?q=#{destination}&days=1&dt=#{eta[:date]}&hour=#{eta[:hour]}")
+  end
+
   private
 
   def get_url(url)
